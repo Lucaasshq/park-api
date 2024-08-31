@@ -16,4 +16,13 @@ public class UsuarioService {
     public Usuario salvar(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
+
+    @Transactional(readOnly = true)
+    public Usuario buscarPorId(Long id) {
+        // método findyById tenta buscar um usuario no banco de dados
+        // caso esse id não exista no banco ele lanca uma RuntimeException
+        return usuarioRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado")
+        );
+    }
 }
