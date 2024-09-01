@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UsuarioService {
@@ -24,5 +26,17 @@ public class UsuarioService {
         return usuarioRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado")
         );
+    }
+
+    @Transactional
+    public Usuario editarSenha(Long id, String password) {
+        Usuario user = buscarPorId(id);
+        user.setPassword(password);
+        return user;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> ListarTodosUsuarios() {
+        return usuarioRepository.findAll();
     }
 }
