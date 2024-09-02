@@ -31,8 +31,8 @@ public class Usuario implements Serializable {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "Role", nullable = false, length = 30)
-    private Role role;
+    @Column(name = "role", nullable = false, length = 30)
+    private Role role = Role.USER;
 
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
