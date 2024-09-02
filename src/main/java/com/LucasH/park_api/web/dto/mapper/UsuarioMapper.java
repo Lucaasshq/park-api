@@ -6,6 +6,8 @@ import com.LucasH.park_api.web.dto.UsuarioResponseDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
+import java.util.List;
+
 public class UsuarioMapper {
 
     public static Usuario toUsuario(UsuarioCreateDto createDto){
@@ -20,5 +22,9 @@ public class UsuarioMapper {
                 mapper -> mapper.map(_ -> role, UsuarioResponseDto::setRole)
         );
         return mapperMain.map(usuario, UsuarioResponseDto.class);
+    }
+
+    public static List<UsuarioResponseDto> toListDto(List<Usuario> usuarios) {
+        return usuarios.stream().map(user -> toDto(user)).toList();
     }
 }
