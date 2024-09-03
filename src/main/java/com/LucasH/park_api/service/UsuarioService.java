@@ -2,6 +2,7 @@ package com.LucasH.park_api.service;
 
 import com.LucasH.park_api.entity.Usuario;
 import com.LucasH.park_api.repository.UsuarioRepository;
+import com.LucasH.park_api.exeception.UsernameUniqueViolationExeception;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,12 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        try {
+            return usuarioRepository.save(usuario);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            throw new UsernameUniqueViolationExeception(String.format("Username {%s} já cadastrado", usuario.getUsername()));
+        }
+
     }
 
     @Transactional(readOnly = true)
