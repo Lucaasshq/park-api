@@ -1,5 +1,7 @@
 package com.LucasH.park_api.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
@@ -8,8 +10,13 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class UsuarioSenhaDto {
-
+    @NotBlank
+    @Size(min = 5, max = 6)
     private String senhaAtual;
+    @NotBlank
+    @Size(min = 6, max = 6)
     private String novaSenha;
-    private String confirmaSenha;
+    @NotBlank
+    @Size(min = 6, max = 6)
+    private String confirmarSenha;
 }
