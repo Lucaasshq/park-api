@@ -1,6 +1,8 @@
 package com.LucasH.park_api.service;
 
 import com.LucasH.park_api.entity.Usuario;
+import com.LucasH.park_api.exeception.EntityNotFoundException;
+import com.LucasH.park_api.exeception.PasswordInvalidException;
 import com.LucasH.park_api.repository.UsuarioRepository;
 import com.LucasH.park_api.exeception.UsernameUniqueViolationExeception;
 import lombok.RequiredArgsConstructor;
@@ -30,19 +32,19 @@ public class UsuarioService {
         // método findyById tenta buscar um usuario no banco de dados
         // caso esse id não exista no banco ele lanca uma RuntimeException
         return usuarioRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado")
+                () -> new EntityNotFoundException("Usuário " + id + " não encontrado")
         );
     }
 
     @Transactional
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         if (!novaSenha.equals(confirmaSenha)) {
-            throw new RuntimeException("Nova senha não confere com confirmação de senha.");
+            throw new PasswordInvalidException("Nova senha não confere com confirmação de senha.");
         }
         Usuario user = buscarPorId(id);
 
         if (!user.getPassword().equals(senhaAtual)) {
-            throw  new RuntimeException("Sua senha não confere");
+            throw  new PasswordInvalidException("Sua senha não confere");
         }
         user.setPassword(novaSenha);
         return user;

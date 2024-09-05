@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 public class UsuarioSenhaDto {
     @NotBlank
-    @Size(min = 5, max = 6)
+    @Size(min = 6, max = 6)
     private String senhaAtual;
     @NotBlank
     @Size(min = 6, max = 6)
