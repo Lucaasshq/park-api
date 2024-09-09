@@ -85,7 +85,57 @@ class UsuarioIT {
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
     }
 
+    @Test
+    public void createUsuario_ComUsernameRepetido_RetornarUsuarioCriandoComStatus409(){
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioCreateDto("Lucas@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(409)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(409);
+
+    }
+
+    @Test
+    public void buscarUsuario_ComIdExistente_RetornarUsuarioComStatus200(){
+        UsuarioResponseDto responseBody = testClient
+                .get()
+                .uri("/api/v1/usuarios/100")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UsuarioResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(100);
+        Assertions.assertThat(responseBody.getUsername()).isEqualTo("test@gmail.com");
+        Assertions.assertThat(responseBody.getRole()).isEqualTo("ADMIN");
 
 
+    }
+
+
+    @Test
+    public void buscarUsuario_ComIdInexistente_RetornarErrorMenssageComStatus404(){
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/usuarios/0")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+
+
+    }
 
 }
