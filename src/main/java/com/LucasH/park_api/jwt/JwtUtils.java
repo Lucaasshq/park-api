@@ -12,6 +12,7 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 
 @Slf4j
 public class JwtUtils {
@@ -26,7 +27,7 @@ public class JwtUtils {
 
     }
 
-    private static Key generateKey() {
+    private static javax.crypto.SecretKey generateKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -43,11 +44,13 @@ public class JwtUtils {
         Key key = generateKey();
 
         String token = Jwts.builder()
+                .header().add("typ","JWT")
+                .and()
                 .subject(username)
                 .issuedAt(issuedAt)
                 .expiration(limit)
+                .signWith(generateKey())
                 .claim("role", role)
-                .signWith(key, SignatureAlgorithm.HS256 )
                 .compact();
 
         return new JwtToken(token);
@@ -56,8 +59,9 @@ public class JwtUtils {
     private static Claims getClaimsFromToken(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey(generateKey()).build()
-                    .parseClaimsJws(refactorToken(token)).getBody();
+                    .verifyWith(generateKey())
+                    .build()
+                    .parseSignedClaims(refactorToken(token)).getPayload();
         } catch (JwtException ex){
             log.error("Token invalido " + ex.getMessage());
         }
@@ -65,14 +69,15 @@ public class JwtUtils {
     }
 
     public static String getUsernameFromToken(String token) {
-        return getClaimsFromToken(token).getSubject();
+        return Objects.requireNonNull(getClaimsFromToken(token)).getSubject();
     }
 
     public static boolean isTokenValid(String token) {
         try {
              Jwts.parser()
-                    .setSigningKey(generateKey()).build()
-                    .parseClaimsJws(refactorToken(token));
+                    .verifyWith(generateKey())
+                     .build()
+                    .parseSignedClaims(refactorToken(token));
              return true;
         } catch (JwtException ex){
             log.error("Token invalido " + ex.getMessage());
