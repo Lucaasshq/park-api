@@ -24,6 +24,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new JwtUserDetails(usuario);
     }
 
+    //Verifica se o usuário esta presente no banco de dados e apartir disso cria seu token
+
     public JwtToken getTokenAuthenticated(String username) {
      Usuario.Role role  = usuarioService.buscarRolePorUsername(username);
          return JwtUtils.createJwtToken(username, role.name() );
