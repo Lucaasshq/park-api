@@ -55,10 +55,17 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+
+
     @Transactional(readOnly = true)
     public Usuario buscarPorUsername(String username) {
         return usuarioRepository.findByUsername(username).orElseThrow(
                 () -> new EntityNotFoundException(username + " não encontrado")
         );
+    }
+
+    @Transactional
+    public Usuario.Role buscarRolePorUsername(String username) {
+        return usuarioRepository.findRoleByUsername(username);
     }
 }
