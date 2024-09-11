@@ -39,13 +39,15 @@ public class JwtUtils {
     public static JwtToken createJwtToken(String username, String role) {
         Date issuedAt = new Date();
         Date limit = toExpireDate(issuedAt);
+
+        Key key = generateKey();
+
         String token = Jwts.builder()
-                .setHeaderParam("typ", "JWT")
-                .setSubject(username)
-                .setIssuedAt(issuedAt)
-                .setExpiration(limit)
-                .signWith(generateKey(), SignatureAlgorithm.ES256 )
+                .subject(username)
+                .issuedAt(issuedAt)
+                .expiration(limit)
                 .claim("role", role)
+                .signWith(key, SignatureAlgorithm.HS256 )
                 .compact();
 
         return new JwtToken(token);
