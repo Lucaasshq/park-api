@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
-@Component
+
 @Slf4j
 
 // Resumo: essa classse intercepta todas as solitações HTTP e verifica se o token é valido
