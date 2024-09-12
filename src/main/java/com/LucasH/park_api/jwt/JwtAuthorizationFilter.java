@@ -17,6 +17,8 @@ import java.io.IOException;
 
 @Component
 @Slf4j
+
+// Resumo: essa classse intercepta todas as solitações HTTP e verifica se o token é valido
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired
