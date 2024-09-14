@@ -63,5 +63,8 @@ public class SpringSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+        //Define um bean para o gerenciador de autenticação. Ele usa a configuração
+        // de autenticação (que pode ser, por exemplo, UserDetailsService
+        // ou outro provedor de autenticação configurado) para retornar o AuthenticationManager
     }
 }
