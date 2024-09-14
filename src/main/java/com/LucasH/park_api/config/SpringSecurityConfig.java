@@ -1,7 +1,6 @@
 package com.LucasH.park_api.config;
 
 import com.LucasH.park_api.jwt.JwtAuthorizationFilter;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,8 +17,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebMvc
+//Ativa as configurações padrão do Spring MVC, como suporte a JSON, XML
 @EnableMethodSecurity
+// Habilita a segurança baseada em métodos, permitindo o uso de anotações como @PreAuthorize ou @Secured
+// para definir regras de acesso nos métodos
 public class SpringSecurityConfig {
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception  {
