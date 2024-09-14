@@ -26,29 +26,38 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception  {
+        // Este método configura a cadeia de filtros de segurança do Spring Security.
         return http
-                .csrf(csrf -> csrf.disable())
-                .formLogin(form -> form.disable())
+                .csrf(csrf -> csrf.disable()) // Desabilita a proteção CSRF, uma vez que a aplicação provavelmente não usa sessões
+                .formLogin(form -> form.disable()) // Desabilita o login via formulário e o HTTP Basic authentication, pois será usada autenticação via JWT.
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "api/v1/usuarios").permitAll()
+                        //Permite que qualquer um acesse o endpoint de criação de usuários (api/v1/usuarios)
                         .requestMatchers(HttpMethod.POST, "api/v1/auth").permitAll()
-                        .anyRequest().authenticated()
+                        //Permite que qualquer um acesse o endpoint de autenticação (api/v1/auth)
+                        .anyRequest().authenticated() // Todas as outras requisições precisam estar autenticadas
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //Define que a política de criação de sessão será stateless, o que significa que o servidor não mantém sessão entre as requisições (ideal para autenticação com JWT)
                 ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
+                // Adiciona o filtro de altorização JWT antes do filtro padrão de autenticação por nomes de usuário e senha
                 ).build();
     }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
         return new JwtAuthorizationFilter();
+        // Retorna uma instância do filtro de autorização JWT. Esse filtro
+        //intercepta as requisições e verifica a presença e validade do token JWT no cabeçalho da requisição.
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+        //Define um bean para o codificador de senhas BCryptPasswordEncoder, usado para
+        // armazenar senhas de forma segura, já que BCrypt é um algoritmo de hashing forte.
     }
 
     @Bean
