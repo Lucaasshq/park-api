@@ -3,7 +3,6 @@ package com.LucasH.park_api.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,28 +28,33 @@ public class JwtUtils {
 
     private static javax.crypto.SecretKey generateKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+        //Este método gera a chave secreta usada para assinar o token JWT usando o algoritmo HMAC-SHA (neste caso, HMAC-SHA256).
+        // Ele converte a chave secreta de uma string para um objeto javax.crypto.SecretKey.
     }
 
     private static Date toExpireDate(Date start) {
         LocalDateTime dateTime = start.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         LocalDateTime end = dateTime.plusDays(EXPIRE_DAYS).plusHours(EXPIRE_HOURS).plusMinutes(EXPIRE_MINUTES);
         return Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
+        // esse método calcula a data de expiração do token. Ele usa a data de emissão (passada como parâmetro)
+        // e adiciona o tempo definido nas constantes
     }
 
     public static JwtToken createJwtToken(String username, String role) {
         Date issuedAt = new Date();
+        // Define a data de emissão
         Date limit = toExpireDate(issuedAt);
-
+        // Calcula a data de expiração
         Key key = generateKey();
 
         String token = Jwts.builder()
-                .header().add("typ","JWT")
+                .header().add("typ","JWT")// Adiciona o tipo do token no cabeçalho (JWT)
                 .and()
-                .subject(username)
-                .issuedAt(issuedAt)
-                .expiration(limit)
-                .signWith(generateKey())
-                .claim("role", role)
+                .subject(username) // Define o nome de usuário (subject) no payload
+                .issuedAt(issuedAt) // Define a data de emissão
+                .expiration(limit) // Define a data de expiração
+                .signWith(generateKey()) // Assina o token usando a chave gerada
+                .claim("role", role) // Adiciona uma claim personalizada, no caso, o papel (role) do usuário
                 .compact();
 
         return new JwtToken(token);
@@ -59,9 +63,9 @@ public class JwtUtils {
     private static Claims getClaimsFromToken(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(generateKey())
+                    .verifyWith(generateKey()) //  usa a chave secreta para verificar a autenticidade do token. A função
                     .build()
-                    .parseSignedClaims(refactorToken(token)).getPayload();
+                    .parseSignedClaims(refactorToken(token)).getPayload(); //  o método retorna todas as claims do token, que incluem o payload inteiro
         } catch (JwtException ex){
             log.error("Token invalido " + ex.getMessage());
         }
@@ -70,6 +74,7 @@ public class JwtUtils {
 
     public static String getUsernameFromToken(String token) {
         return Objects.requireNonNull(getClaimsFromToken(token)).getSubject();
+        // Extrai o nome de usuário (subject) das claims contidas no token JWT, usando o metódo GetClaimsFromToken()
     }
 
     public static boolean isTokenValid(String token) {
@@ -79,6 +84,10 @@ public class JwtUtils {
                      .build()
                     .parseSignedClaims(refactorToken(token));
              return true;
+             //Verifica se o token JWT é válido. Ele tenta fazer o parsing do token e
+            // , se for bem-sucedido (ou seja, o token não está expirado e foi assinado corretamente),
+            // retorna true
+            // caso contrario retorna false
         } catch (JwtException ex){
             log.error("Token invalido " + ex.getMessage());
         }
@@ -88,6 +97,9 @@ public class JwtUtils {
     private static String refactorToken(String token) {
         if (token.contains(JWT_BEARER)){
             return token.substring(JWT_BEARER.length());
+            // Remove o prefixo "Bearer " do token, caso ele esteja presente. Esse método é útil porque,
+            // muitas vezes, os tokens são enviados no formato "Bearer <token>" no cabeçalho HTTP
+            // e é necessário removê-lo antes de realizar qualquer processamento.
         }
         return token;
     }
