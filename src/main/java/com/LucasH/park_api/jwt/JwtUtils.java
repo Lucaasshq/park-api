@@ -13,6 +13,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 @Slf4j
 public class JwtUtils {
     public static final String JWT_BEARER = "Bearer ";
@@ -63,7 +65,7 @@ public class JwtUtils {
     private static Claims getClaimsFromToken(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(generateKey()) //  usa a chave secreta para verificar a autenticidade do token. A função
+                    .verifyWith(generateKey()) //  usa a chave secreta para verificar a autenticidade do token
                     .build()
                     .parseSignedClaims(refactorToken(token)).getPayload(); //  o método retorna todas as claims do token, que incluem o payload inteiro
         } catch (JwtException ex){
@@ -72,8 +74,19 @@ public class JwtUtils {
         return null;
     }
 
+    private static String refactorToken(String token) {
+        if (token.contains(JWT_BEARER)){
+            return token.substring(JWT_BEARER.length());
+            // Remove o prefixo "Bearer " do token, caso ele esteja presente. Esse método é útil porque,
+            // muitas vezes, os tokens são enviados no formato "Bearer <token>" no cabeçalho HTTP
+            // e é necessário removê-lo antes de realizar qualquer processamento.
+        }
+        return token;
+    }
+
+
     public static String getUsernameFromToken(String token) {
-        return Objects.requireNonNull(getClaimsFromToken(token)).getSubject();
+        return getClaimsFromToken(token).getSubject();
         // Extrai o nome de usuário (subject) das claims contidas no token JWT, usando o metódo GetClaimsFromToken()
     }
 
@@ -94,14 +107,6 @@ public class JwtUtils {
         return false;
     }
 
-    private static String refactorToken(String token) {
-        if (token.contains(JWT_BEARER)){
-            return token.substring(JWT_BEARER.length());
-            // Remove o prefixo "Bearer " do token, caso ele esteja presente. Esse método é útil porque,
-            // muitas vezes, os tokens são enviados no formato "Bearer <token>" no cabeçalho HTTP
-            // e é necessário removê-lo antes de realizar qualquer processamento.
-        }
-        return token;
-    }
+
 
 }
