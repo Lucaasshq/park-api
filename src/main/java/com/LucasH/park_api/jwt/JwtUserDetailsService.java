@@ -15,8 +15,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     private final UsuarioService usuarioService;
 
 
-    //Verifica se o usuário esta presente no banco de dados aparti do nome dele
-    // Caso não esteja retorna uma UsernameNotFoundExeception
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = usuarioService.buscarPorUsername(username);
@@ -24,7 +23,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new JwtUserDetails(usuario);
     }
 
-    //Verifica se o usuário esta presente no banco de dados e apartir disso cria seu token
+
 
     public JwtToken getTokenAuthenticated(String username) {
      Usuario.Role role  = usuarioService.buscarRolePorUsername(username);
