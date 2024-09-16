@@ -23,11 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1")
+//Indica que essa classe é um controller REST do Spring. Ele
+// expõe endpoints HTTP para serem consumidos via requisições HTTP, como POST ou GET
 public class AutenticacaoController {
 
     private final JwtUserDetailsService detailsService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    //Este serviço é usado para buscar os detalhes do usuário e
+    // gerar o token JWT após a autenticação bem-sucedida.
+
+    private final AuthenticationManager authenticationManager;
+    // do Spring Security é responsável por autenticar o
+    // usuário com base em suas credenciais (nome de usuário e senha).
 
     @PostMapping("/auth")
     public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDto dto, HttpServletRequest request) {
@@ -35,8 +41,12 @@ public class AutenticacaoController {
         try {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+            //O objeto UsernamePasswordAuthenticationToken é criado com as credenciais do usuário
+            // (nome de usuário e senha), fornecidas no UsuarioLoginDto
 
             authenticationManager.authenticate(authenticationToken);
+            //Este token é enviado para o authenticationManager.authenticate()
+            // para verificar as credenciais.
 
             JwtToken token = detailsService.getTokenAuthenticated(dto.getUsername());
             return ResponseEntity.ok(token);

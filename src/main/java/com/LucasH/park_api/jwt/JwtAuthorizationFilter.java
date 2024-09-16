@@ -7,18 +7,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 
 @Slf4j
 
-// Resumo: essa classse intercepta todas as solitações HTTP e verifica se o token é valido
+//  filtro de autorização JWT que intercepta todas as requisições HTTP
+//  e verifica se um token JWT válido está presente no cabeçalho da requisição.
+//  Ela estende a classe OncePerRequestFilter, o que significa que esse filtro
+//  será executado uma vez por requisição
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired
