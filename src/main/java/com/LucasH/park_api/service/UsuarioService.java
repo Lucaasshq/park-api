@@ -23,6 +23,7 @@ public class UsuarioService {
     public Usuario salvar(Usuario usuario) {
         try {
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            // Criptografa a senha e é salva no banco de dados
             return usuarioRepository.save(usuario);
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
             throw new UsernameUniqueViolationExeception(String.format("Username {%s} já cadastrado", usuario.getUsername()));
@@ -31,6 +32,9 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
+    // Define que as operações serão executadas em uma transação. Se algo der errado,
+    // as alterações no banco de dados serão revertidas.
+    // O parâmetro readOnly = true indica que o método não realiza modificações no banco.
     public Usuario buscarPorId(Long id) {
         // método findyById tenta buscar um usuario no banco de dados
         // caso esse id não exista no banco ele lanca uma RuntimeException
