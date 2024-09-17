@@ -58,13 +58,14 @@ public class UsuarioController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN') OR (hasAuthority('USER') AND  #id == authentication.principal.id)")
     //hasAuthority('ADMIN'):
-    // Permite que usuários com a autoridade (ou role) de ADMIN acessem este método.
+    // Permite que usuários com a autoridade (ou role) de ADMIN acessem esse método
     // =============================================================================================================
     // =============================================================================================================
     //(hasAuthority('USER') AND #id == authentication.principal.id):
-    //  Esta parte da expressão permite que usuários com a autoridade USER acessem o método somente se o id
-    //  passado no endpoint for igual ao id do usuário autenticado. Aqui, a variável #id é o valor passado como
-    //  parâmetro para o método, e authentication.principal.id é o ID do usuário atualmente autenticado no sistema.
+    // Esta partem da expressão permite que usuários com autoridade USER acessem o método somente
+    // se o "id" passado no endpoint for igual ao id do usuário autenticado. a variável #id é o
+    // valor passado como parâmetro para o método , e authentication.principal.id é o ID do usuário
+    // atualmente autenticado no sistema
 
     public ResponseEntity<UsuarioResponseDto> getById(@PathVariable Long id) {
         Usuario user = usuarioService.buscarPorId(id);

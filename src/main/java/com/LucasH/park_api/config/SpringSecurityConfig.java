@@ -1,5 +1,6 @@
 package com.LucasH.park_api.config;
 
+import com.LucasH.park_api.jwt.JwtAuthenticationEntryPoint;
 import com.LucasH.park_api.jwt.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +44,9 @@ public class SpringSecurityConfig {
                 ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
                 // Adiciona o filtro de altorização JWT antes do filtro padrão de autenticação por nomes de usuário e senha
-                ).build();
+                ).exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
+                .build();
     }
 
     @Bean
