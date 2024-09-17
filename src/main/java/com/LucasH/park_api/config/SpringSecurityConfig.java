@@ -24,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 // para definir regras de acesso nos métodos
 public class SpringSecurityConfig {
 
+    // Acesso as URI do SWAGGER API
     private static final String[] DOCUMENTATION_OPENAPI = {
             "/doc-park/index.html",
             "/doc-park.html", "/doc-park/**",
