@@ -11,6 +11,10 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import java.io.IOException;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    //JwtAuthenticationEntryPoint é responsável por lidar com tentativas de acesso a recursos protegidos
+    // sem autenticação válida, registrando o erro e retornando uma resposta HTTP 401 Unauthorized, sinalizando
+    // para o cliente que ele deve fornecer um token JWT válido para acessar o recurso.
+
     private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
 
     @Override
