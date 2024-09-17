@@ -24,6 +24,15 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 // para definir regras de acesso nos métodos
 public class SpringSecurityConfig {
 
+    private static final String[] DOCUMENTATION_OPENAPI = {
+            "/doc-park/index.html",
+            "/doc-park.html", "/doc-park/**",
+            "/v3/api-doc/**",
+            "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
+            "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
+    };
+
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception  {
@@ -37,6 +46,7 @@ public class SpringSecurityConfig {
                         //Permite que qualquer um acesse o endpoint de criação de usuários (api/v1/usuarios)
                         .requestMatchers(HttpMethod.POST, "api/v1/auth").permitAll()
                         //Permite que qualquer um acesse o endpoint de autenticação (api/v1/auth)
+                        .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                         .anyRequest().authenticated() // Todas as outras requisições precisam estar autenticadas
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
