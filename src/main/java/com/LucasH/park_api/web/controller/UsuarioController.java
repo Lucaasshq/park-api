@@ -98,6 +98,7 @@ public class UsuarioController {
                             content = @Content(mediaType = "application/json",
                                     array = @ArraySchema( schema =  @Schema(implementation = UsuarioResponseDto.class) ))),})
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
         List<Usuario> users = usuarioService.listarTodosUsuarios();
         return ResponseEntity.status(HttpStatus.OK).body(UsuarioMapper.toListDto(users));
