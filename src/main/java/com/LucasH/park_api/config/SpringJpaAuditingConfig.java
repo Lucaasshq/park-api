@@ -11,6 +11,10 @@ import java.util.Optional;
 @Configuration
 @EnableJpaAuditing
 public class SpringJpaAuditingConfig implements AuditorAware<String> {
+    // classe SpringJpaAuditingConfig que você forneceu está configurando
+    // o JPA Auditing em uma aplicação Spring, que é uma funcionalidade que
+    // permite rastrear automaticamente informações como "quem criou" e "quem
+    // modificou" uma entidade em um banco de dados.
     @Override
     public Optional<String> getCurrentAuditor() {
 
@@ -18,6 +22,8 @@ public class SpringJpaAuditingConfig implements AuditorAware<String> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             return Optional.of(authentication.getName());
+            //Este método é responsável por retornar o auditor (a pessoa atualmente autenticada no sistema)
+            // no formato Optional<String>.
         }
 
         return null;

@@ -60,7 +60,6 @@ public class UsuarioController {
     //hasAuthority('ADMIN'):
     // Permite que usuários com a autoridade (ou role) de ADMIN acessem esse método
     // =============================================================================================================
-    // =============================================================================================================
     //(hasAuthority('USER') AND #id == authentication.principal.id):
     // Esta partem da expressão permite que usuários com autoridade USER acessem o método somente
     // se o "id" passado no endpoint for igual ao id do usuário autenticado. a variável #id é o

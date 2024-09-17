@@ -40,7 +40,8 @@ public class SpringSecurityConfig {
                         .anyRequest().authenticated() // Todas as outras requisições precisam estar autenticadas
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //Define que a política de criação de sessão será stateless, o que significa que o servidor não mantém sessão entre as requisições (ideal para autenticação com JWT)
+                //Define que a política de criação de sessão será stateless, o que significa que o servidor não mantém sessão entre as requisições
+                        // (ideal para autenticação com JWT)
                 ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
                 // Adiciona o filtro de altorização JWT antes do filtro padrão de autenticação por nomes de usuário e senha
