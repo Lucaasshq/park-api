@@ -22,8 +22,8 @@ public class SpringJpaAuditingConfig implements AuditorAware<String> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             return Optional.of(authentication.getName());
-            //Este método é responsável por retornar o auditor (a pessoa atualmente autenticada no sistema)
-            // no formato Optional<String>.
+            //Este método é responsável por retornar o auditor (a pessoa
+            // atualmente autenticada no sistema no formato Optional<String>.
         }
 
         return null;
