@@ -126,7 +126,7 @@ class UsuarioIT {
         responseBody = testClient
                 .get()
                 .uri("/api/v1/usuarios/101")
-                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@gmail.com", "123456"))
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "test@gmail.com", "123456"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UsuarioResponseDto.class)
@@ -134,14 +134,14 @@ class UsuarioIT {
 
         Assertions.assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.getId()).isNotNull();
-        Assertions.assertThat(responseBody.getId()).isEqualTo(100);
+        Assertions.assertThat(responseBody.getId()).isEqualTo(101);
         Assertions.assertThat(responseBody.getUsername()).isEqualTo("bob@gmail.com");
         Assertions.assertThat(responseBody.getRole()).isEqualTo("USER");
 
 
         responseBody = testClient
                 .get()
-                .uri("/api/v1/usuarios/103")
+                .uri("/api/v1/usuarios/102")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "raissa@gmail.com", "123456"))
                 .exchange()
                 .expectStatus().isOk()
@@ -150,7 +150,7 @@ class UsuarioIT {
 
         Assertions.assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.getId()).isNotNull();
-        Assertions.assertThat(responseBody.getId()).isEqualTo(100);
+        Assertions.assertThat(responseBody.getId()).isEqualTo(102);
         Assertions.assertThat(responseBody.getUsername()).isEqualTo("raissa@gmail.com");
         Assertions.assertThat(responseBody.getRole()).isEqualTo("USER");
 
