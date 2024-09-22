@@ -42,7 +42,7 @@ public class ApiExeceptionHandler {
 
 
     @ExceptionHandler({UsernameUniqueViolationExeception.class, CpfUniqueViolationExeception.class})
-    public ResponseEntity<ErrorMessage> UniqueViolationExeception(UsernameUniqueViolationExeception ex,
+    public ResponseEntity<ErrorMessage> uniqueViolationExeception(Exception ex,
                                                                         HttpServletRequest request){
         log.error("Api Error - ", ex);
         return ResponseEntity
