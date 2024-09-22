@@ -1,5 +1,6 @@
 package com.LucasH.park_api.web.exeception;
 
+import com.LucasH.park_api.exeception.CpfUniqueViolationExeception;
 import com.LucasH.park_api.exeception.EntityNotFoundException;
 import com.LucasH.park_api.exeception.PasswordInvalidException;
 import com.LucasH.park_api.exeception.UsernameUniqueViolationExeception;
@@ -40,8 +41,8 @@ public class ApiExeceptionHandler {
 
 
 
-    @ExceptionHandler(UsernameUniqueViolationExeception.class)
-    public ResponseEntity<ErrorMessage> usernameUniqueViolationExeception(UsernameUniqueViolationExeception ex,
+    @ExceptionHandler({UsernameUniqueViolationExeception.class, CpfUniqueViolationExeception.class})
+    public ResponseEntity<ErrorMessage> UniqueViolationExeception(UsernameUniqueViolationExeception ex,
                                                                         HttpServletRequest request){
         log.error("Api Error - ", ex);
         return ResponseEntity
