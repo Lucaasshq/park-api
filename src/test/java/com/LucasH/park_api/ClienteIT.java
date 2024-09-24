@@ -118,4 +118,22 @@ public class ClienteIT {
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
 
     }
+
+
+    @Test
+    public void localizarCliente_ComDadosValidos_RetornarClienteComStatus200() {
+        ClienteResponseDto responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/10")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClienteResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(10);
+
+
+    }
 }

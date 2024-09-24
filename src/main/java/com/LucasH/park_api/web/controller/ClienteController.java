@@ -19,10 +19,7 @@ import org.modelmapper.spi.ErrorMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Clientes", description = "Contém todas as operações relativas ao recurso de um cliente")
 @RestController
@@ -53,5 +50,23 @@ public class ClienteController {
         cliente.setUsuario(usuarioService.buscarPorId(userDetails.getId()));
         clienteService.salvar(cliente);
         return ResponseEntity.status(201).body(ClienteMapper.toDto(cliente));
+    }
+
+
+    @Operation(summary = "Localiza cliente", description = "Recurso para buscar cliente vinculado a um usuário cadastrado." +
+            " Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = UsuarioResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Cliente não encontrado",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "Recurso não permitido ao perfil de cliente",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
+            })
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ClienteResponseDto> getById(@PathVariable Long id) {
+        Cliente cliente = clienteService.buscarPorId(id);
+        return ResponseEntity.ok(ClienteMapper.toDto(cliente));
     }
 }
