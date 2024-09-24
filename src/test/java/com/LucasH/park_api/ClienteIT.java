@@ -142,7 +142,7 @@ public class ClienteIT {
                 .uri("/api/v1/clientes/0")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456"))
                 .exchange()
-                .expectStatus().isNotFound(404)
+                .expectStatus().isNotFound()
                 .expectBody(ErrorMessage.class)
                 .returnResult().getResponseBody();
 
