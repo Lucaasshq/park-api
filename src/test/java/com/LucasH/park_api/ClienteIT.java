@@ -2,6 +2,7 @@ package com.LucasH.park_api;
 
 import com.LucasH.park_api.web.dto.ClienteCreateDto;
 import com.LucasH.park_api.web.dto.ClienteResponseDto;
+import com.LucasH.park_api.web.exeception.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,86 @@ public class ClienteIT {
         Assertions.assertThat(responseBody.getNome()).isEqualTo("Tobias Ferreira");
         Assertions.assertThat(responseBody.getId()).isNotNull();
         Assertions.assertThat(responseBody.getCpf()).isEqualTo("26720600028");
+    }
+
+    @Test
+    public void criarCliente_ComCPFJaCadastrados_RetornarErrorMenssageComStatus409() {
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "toby@gmail.com", "123456"))
+                .bodyValue(new ClienteCreateDto("Tobias Ferreira", "17908922015"))
+                .exchange()
+                .expectStatus().isEqualTo(409)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(409);
+
+    }
+
+    @Test
+    public void criarCliente_ComDadosInvalidos_RetornarErrorMenssageComStatus422() {
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "toby@gmail.com", "123456"))
+                .bodyValue(new ClienteCreateDto("", ""))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+         responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "toby@gmail.com", "123456"))
+                .bodyValue(new ClienteCreateDto("Juan", "00000000000"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "toby@gmail.com", "123456"))
+                .bodyValue(new ClienteCreateDto("Juan", "179.089.220-15"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+    }
+
+    @Test
+    public void criarCliente_ComComPerfilAdmin_RetornarErrorMenssageComStatus403() {
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456"))
+                .bodyValue(new ClienteCreateDto("administrador", "17908922015"))
+                .exchange()
+                .expectStatus().isEqualTo(403)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
     }
 }
