@@ -1,0 +1,2 @@
+delete from CLIENTES;
+DELETE FROM USUARIOS;
