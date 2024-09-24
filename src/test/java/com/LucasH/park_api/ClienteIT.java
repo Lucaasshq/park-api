@@ -2,7 +2,6 @@ package com.LucasH.park_api;
 
 import com.LucasH.park_api.web.dto.ClienteCreateDto;
 import com.LucasH.park_api.web.dto.ClienteResponseDto;
-import com.LucasH.park_api.web.dto.UsuarioResponseDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
