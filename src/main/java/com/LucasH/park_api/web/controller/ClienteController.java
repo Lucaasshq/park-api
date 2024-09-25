@@ -2,12 +2,15 @@ package com.LucasH.park_api.web.controller;
 
 import com.LucasH.park_api.entity.Cliente;
 import com.LucasH.park_api.jwt.JwtUserDetails;
+import com.LucasH.park_api.repository.projection.ClienteProjection;
 import com.LucasH.park_api.service.ClienteService;
 import com.LucasH.park_api.service.UsuarioService;
 import com.LucasH.park_api.web.dto.ClienteCreateDto;
 import com.LucasH.park_api.web.dto.ClienteResponseDto;
+import com.LucasH.park_api.web.dto.PageableDto;
 import com.LucasH.park_api.web.dto.UsuarioResponseDto;
 import com.LucasH.park_api.web.dto.mapper.ClienteMapper;
+import com.LucasH.park_api.web.dto.mapper.PageableMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -78,8 +81,8 @@ public class ClienteController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Page<Cliente>> getAll(Pageable pageable) {
-        Page<Cliente> clientes = clienteService.buscarTodos(pageable);
-        return ResponseEntity.ok(clientes);
+    public ResponseEntity<PageableDto> getAll(Pageable pageable) {
+        Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
+        return ResponseEntity.ok(PageableMapper.toDto(clientes));
     }
 }

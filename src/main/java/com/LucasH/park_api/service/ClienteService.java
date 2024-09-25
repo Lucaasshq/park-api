@@ -4,6 +4,7 @@ import com.LucasH.park_api.entity.Cliente;
 import com.LucasH.park_api.exeception.CpfUniqueViolationExeception;
 import com.LucasH.park_api.exeception.EntityNotFoundException;
 import com.LucasH.park_api.repository.ClienteRepository;
+import com.LucasH.park_api.repository.projection.ClienteProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ public class ClienteService {
      }
 
      @Transactional(readOnly = true)
-    public Page<Cliente> buscarTodos(Pageable pageable) {
-        return clienteRepository.findAll(pageable);
+    public Page<ClienteProjection> buscarTodos(Pageable pageable) {
+        return clienteRepository.findAllPageable(pageable);
     }
 }
