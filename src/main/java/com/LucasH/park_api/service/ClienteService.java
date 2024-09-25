@@ -6,9 +6,12 @@ import com.LucasH.park_api.exeception.EntityNotFoundException;
 import com.LucasH.park_api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -31,4 +34,9 @@ public class ClienteService {
                  () -> new EntityNotFoundException("Cliente de id " + id + " não encontrado no sistema")
          );
      }
+
+     @Transactional(readOnly = true)
+    public Page<Cliente> buscarTodos(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
+    }
 }
