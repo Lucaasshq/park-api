@@ -198,4 +198,34 @@ public class ClienteIT {
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
 
     }
+
+    @Test
+    public void buscarCliente_ComDadosDoToken_RetornarClienteComStatus200() {
+        ClienteResponseDto responseBody = testClient
+                .get().uri("/api/v1/clientes/detalhes")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClienteResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getCpf()).isEqualTo("38352600060");
+        Assertions.assertThat(responseBody.getNome()).isEqualTo("bob souza");
+    }
+
+    @Test
+    public void buscarCliente_ComDadosDoTokenDeAdministrador_RetornarErrorMenssageComStatus403() {
+        ErrorMessage responseBody = testClient
+                .get().uri("/api/v1/clientes/detalhes")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+    }
+
 }
