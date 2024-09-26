@@ -12,6 +12,10 @@ import com.LucasH.park_api.web.dto.UsuarioResponseDto;
 import com.LucasH.park_api.web.dto.mapper.ClienteMapper;
 import com.LucasH.park_api.web.dto.mapper.PageableMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,6 +31,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.Query;
 import java.util.List;
 
 @Tag(name = "Clientes", description = "Contém todas as operações relativas ao recurso de um cliente")
@@ -79,15 +84,29 @@ public class ClienteController {
         return ResponseEntity.ok(ClienteMapper.toDto(cliente));
     }
 
-    @Operation(summary = "Localiza cliente", description = "Recurso para buscar cliente vinculado a um usuário cadastrado." +
-            " Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+    @Operation(summary = "Localiza todos os clientes",
+            description = "Recurso para buscar todos os cliente vinculado a um usuário cadastrado." +
+                    " Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
             security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.QUERY, name = "page",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "0")),
+                            description = "Representa a página retornada"
+                    ),
+                    @Parameter(in = ParameterIn.QUERY, name = "size",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "20")),
+                            description = "Representa o total de elementos por página"
+                    ),
+                    @Parameter(in = ParameterIn.QUERY, name = "sort",
+                            array = @ArraySchema(schema = @Schema(type = "integer", defaultValue = "id,asc")),
+                            description = "Representa a ordenação dos resultados. Aceita multiplos criterios de ordenação são suportados"
+                    ),
+
+            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
                             content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = UsuarioResponseDto.class))),
-                    @ApiResponse(responseCode = "404", description = "Cliente não encontrado",
-                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
-                    @ApiResponse(responseCode = "403", description = "Recurso não permitido ao perfil de cliente",
+                    @ApiResponse(responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
                             content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @GetMapping
