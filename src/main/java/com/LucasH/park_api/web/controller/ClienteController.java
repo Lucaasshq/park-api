@@ -1,6 +1,7 @@
 package com.LucasH.park_api.web.controller;
 
 import com.LucasH.park_api.entity.Cliente;
+import com.LucasH.park_api.entity.Usuario;
 import com.LucasH.park_api.jwt.JwtUserDetails;
 import com.LucasH.park_api.repository.projection.ClienteProjection;
 import com.LucasH.park_api.service.ClienteService;
@@ -97,7 +98,7 @@ public class ClienteController {
                             content = @Content(schema = @Schema(type = "integer", defaultValue = "20")),
                             description = "Representa o total de elementos por página"
                     ),
-                    @Parameter(in = ParameterIn.QUERY, name = "sort",
+                    @Parameter(in = ParameterIn.QUERY, name = "sort", hidden = true,
                             array = @ArraySchema(schema = @Schema(type = "integer", defaultValue = "id,asc")),
                             description = "Representa a ordenação dos resultados. Aceita multiplos criterios de ordenação são suportados"
                     ),
@@ -111,8 +112,15 @@ public class ClienteController {
             })
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<PageableDto> getAll(Pageable pageable) {
+    public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true) Pageable pageable) {
         Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
         return ResponseEntity.ok(PageableMapper.toDto(clientes));
     }
-}
+
+    @GetMapping("/detalhes")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<ClienteResponseDto> getDetalhes(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        Cliente cliente = clienteService.buscarPorUsuarioId(userDetails.getId());
+        return ResponseEntity.ok(ClienteMapper.toDto(cliente));
+    }
+    }

@@ -2,6 +2,7 @@ package com.LucasH.park_api;
 
 import com.LucasH.park_api.web.dto.ClienteCreateDto;
 import com.LucasH.park_api.web.dto.ClienteResponseDto;
+import com.LucasH.park_api.web.dto.PageableDto;
 import com.LucasH.park_api.web.exeception.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -163,5 +164,38 @@ public class ClienteIT {
 
         Assertions.assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    public void localizarTodosClientes_ComRoleAdmin_RetornarClienteComStatus200() {
+        PageableDto responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getContent().size()).isEqualTo(2);
+        Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void localizarTodosClientes_ComRoleCliente_RetornarErrorMenssageComStatus403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(403)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
     }
 }
