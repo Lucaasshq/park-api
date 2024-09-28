@@ -217,7 +217,8 @@ public class ClienteIT {
     @Test
     public void buscarCliente_ComDadosDoTokenDeAdministrador_RetornarErrorMenssageComStatus403() {
         ErrorMessage responseBody = testClient
-                .get().uri("/api/v1/clientes/detalhes")
+                .get()
+                .uri("/api/v1/clientes/detalhes")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456"))
                 .exchange()
                 .expectStatus().isForbidden()
