@@ -26,7 +26,9 @@ public class VagaService {
 
     public Vaga buscarPorCodigo(String codigo) {
         return vagaRepository.findByCodigo(codigo).orElseThrow(
-                () -> new EntityNotFoundException("Vaga " + codigo " não foi encontrada")
+                () -> new EntityNotFoundException("Vaga " + codigo +" não foi encontrada")
         );
     }
+
+
 }
