@@ -29,7 +29,7 @@ public class Vaga implements Serializable {
     @Column(name = "codigo", nullable = false,unique = true, length = 4)
     private String codigo;
 
-    @Column(name = "status vaga", nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusVaga status;
 
