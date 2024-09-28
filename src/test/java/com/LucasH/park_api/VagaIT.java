@@ -1,6 +1,7 @@
 package com.LucasH.park_api;
 
 import com.LucasH.park_api.web.dto.VagaCreateDto;
+import com.LucasH.park_api.web.dto.VagaResponseDto;
 import com.LucasH.park_api.web.exeception.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -88,5 +89,77 @@ public class VagaIT {
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
         Assertions.assertThat(responseBody.getMethod()).isEqualTo("POST");
         Assertions.assertThat(responseBody.getPath()).isEqualTo("/api/v1/vagas");
+    }
+
+    @Test
+    public void LocalizarVaga_ComCodigoExistente_RetornarVagaResponseDtoStatus200() {
+        VagaResponseDto responseBody = testClient
+                .get()
+                .uri("api/v1/vagas/{codigo}", "A-01")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"admin@gmail.com","123456" ))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(VagaResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo("LIVRE");
+        Assertions.assertThat(responseBody.getCodigo()).isEqualTo("A-01");
+        Assertions.assertThat(responseBody.getId()).isEqualTo(10);
+    }
+
+    @Test
+    public void LocalizarVaga_ComCodigoInexistente_RetornarErrorComStatus404() {
+        testClient
+                .get()
+                .uri("api/v1/vagas/{codigo}", "A-10")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"admin@gmail.com","123456" ))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("status").isEqualTo(404)
+                .jsonPath("method").isEqualTo("GET")
+                .jsonPath("path").isEqualTo("/api/v1/vagas/A-10");
+
+
+    }
+
+    @Test
+    public void criarVaga_ComRoleUSER_RetornarErrorMensageComStatus403() {
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("api/v1/vagas")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"bob@gmail.com","123456" ))
+                .bodyValue(new VagaCreateDto("A-04", "LIVRE"))
+                .exchange()
+                .expectStatus().isEqualTo(403)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+        Assertions.assertThat(responseBody.getMethod()).isEqualTo("POST");
+        Assertions.assertThat(responseBody.getPath()).isEqualTo("/api/v1/vagas");
+        Assertions.assertThat(responseBody.getMessage()).isEqualTo("Access Denied");
+
+    }
+    @Test
+    public void localizarVaga_ComRoleUSER_RetornarErrorMensageComStatus403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("api/v1/vagas/{codigo}", "A-01")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"bob@gmail.com","123456" ))
+                .exchange()
+                .expectStatus().isEqualTo(403)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+        Assertions.assertThat(responseBody.getMethod()).isEqualTo("GET");
+        Assertions.assertThat(responseBody.getPath()).isEqualTo("/api/v1/vagas/A-01");
+        Assertions.assertThat(responseBody.getMessage()).isEqualTo("Access Denied");
+
     }
 }

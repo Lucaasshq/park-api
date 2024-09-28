@@ -38,6 +38,8 @@ public class VagaController {
             responses = {
                     @ApiResponse(responseCode = "201", description = "Recurso criando com sucesso",
                             headers = @Header(name = HttpHeaders.LOCATION, description = "URL do recurso criado")),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado para ROLE='USER'",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "409", description = "Vaga já cadastrada",
                             content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "422", description = "Recurso não encontrado por falta de dados ou dados invalido",
@@ -60,11 +62,11 @@ public class VagaController {
             security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Recurso criando com sucesso",
-                            content = @Content(mediaType = "application/json;charset=UTF-8",
-                            schema = @Schema(implementation = ErrorMessage.class))),
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado para ROLE='USER'",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "404", description = "Vaga não localizada",
-                            content = @Content(mediaType = "application/json;charset=UTF-8",
-                            schema = @Schema(implementation = ErrorMessage.class)))
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @GetMapping("/{codigo}")
     @PreAuthorize("hasAuthority('ADMIN')")
