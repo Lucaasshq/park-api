@@ -26,7 +26,7 @@ public class Vaga implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "codigo", nullable = false,unique = true, length = 4)
+    @Column(name = "codigo", nullable = false, unique = true, length = 4)
     private String codigo;
 
     @Column(name = "status", nullable = false)
