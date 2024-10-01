@@ -1,5 +1,7 @@
 package com.LucasH.park_api.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) // Anotação para acaso algum dos campos vinherem NULL eles não apararecerem no ResponseEntity
 public class EstacionamentoResponseDto {
 
 
@@ -31,8 +34,10 @@ public class EstacionamentoResponseDto {
 
     private String recibo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime dataEntrada;
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime dataSaida;
 
     private String vagaCodigo;
