@@ -4,10 +4,13 @@ import com.LucasH.park_api.entity.Vaga;
 import com.LucasH.park_api.exeception.CodigoUniqueViolationExeception;
 import com.LucasH.park_api.exeception.EntityNotFoundException;
 import com.LucasH.park_api.repository.VagaRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import static com.LucasH.park_api.entity.Vaga.StatusVaga.LIVRE;
 
 @RequiredArgsConstructor
 @Service
@@ -31,4 +34,9 @@ public class VagaService {
     }
 
 
+    public Vaga buscarPorVagaLivre() {
+     return vagaRepository.findFirstByStatus(LIVRE).orElseThrow(
+             () -> new EntityNotFoundException("Nenhuma vaga livre foi encontrada")
+     );
+    }
 }
