@@ -144,4 +144,59 @@ public class EstacionamentoIT {
                 .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in")
                 .jsonPath("method").isEqualTo("POST");
     }
+
+    @Test
+    public void BuscarPorRecibo_ComReciboValido_RetornarEstacionamentoResponseDtoStatus200() {
+
+        testClient
+                .get()
+                .uri("api/v1/estacionamentos/check-in/{recibo}" ,"20241001-141519")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isOk() // 404
+                .expectBody()
+                .jsonPath("placa").isEqualTo("ASD-8564")
+                .jsonPath("marca").isEqualTo("Honda")
+                .jsonPath("modelo").isEqualTo("Civic Sport")
+                .jsonPath("cor").isEqualTo("Branco")
+                .jsonPath("clienteCpf").isEqualTo("38352600060")
+                .jsonPath("recibo").isEqualTo("20241001-141519")
+                .jsonPath("dataEntrada").exists()
+                .jsonPath("vagaCodigo").isEqualTo("A-01");
+    }
+
+    @Test
+    public void BuscarPorRecibo_ComRoleCliente_RetornarEstacionamentoResponseDtoStatus200() {
+
+        testClient
+                .get()
+                .uri("api/v1/estacionamentos/check-in/{recibo}" ,"20241001-141519")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isOk() // 404
+                .expectBody()
+                .jsonPath("placa").isEqualTo("ASD-8564")
+                .jsonPath("marca").isEqualTo("Honda")
+                .jsonPath("modelo").isEqualTo("Civic Sport")
+                .jsonPath("cor").isEqualTo("Branco")
+                .jsonPath("clienteCpf").isEqualTo("38352600060")
+                .jsonPath("recibo").isEqualTo("20241001-141519")
+                .jsonPath("dataEntrada").exists()
+                .jsonPath("vagaCodigo").isEqualTo("A-01");
+    }
+
+    @Test
+    public void BuscarPorRecibo_ComReciboInexistente_RetornarErrorMensageStatus404() {
+
+        testClient
+                .get()
+                .uri("api/v1/estacionamentos/check-in/{recibo}" ,"20241001-222222")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isNotFound() // 404
+                .expectBody()
+                .jsonPath("status").isEqualTo("404")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in/20241001-222222")
+                .jsonPath("method").isEqualTo("GET");
+    }
 }

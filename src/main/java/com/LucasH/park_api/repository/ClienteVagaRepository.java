@@ -1,6 +1,5 @@
-package com.LucasH.park_api.repository.projection;
+package com.LucasH.park_api.repository;
 
-import com.LucasH.park_api.entity.Cliente;
 import com.LucasH.park_api.entity.ClienteVaga;
 import org.springframework.data.jpa.repository.JpaRepository;
 
