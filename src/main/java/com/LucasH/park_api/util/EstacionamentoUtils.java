@@ -35,10 +35,14 @@ public class EstacionamentoUtils {
         double total = 0.0;
 
         if (minutos <= 15) {
+
             total += PRIMEIROS_15_MINUTOS;
         } else if (minutos <= 60) {
+
             total += PRIMEIROS_60_MINUTOS;
+
         } else {
+
             long tempoAdicional = minutos - 60;
             long intervalosAdicionais = (tempoAdicional + 14) / 15;
             total += PRIMEIROS_60_MINUTOS + (ADICIONAL_15_MINUTOS * intervalosAdicionais);
@@ -53,9 +57,13 @@ public class EstacionamentoUtils {
         BigDecimal desconto = null;
 
         if (numeroDeVezes % 10 == 0 && numeroDeVezes > 0) {
+
             desconto = custo.multiply(BigDecimal.valueOf(DESCONTO_PERCENTUAL));
+
         } else {
+
             desconto = new BigDecimal(0);
+
         }
 
 
