@@ -33,6 +33,7 @@ public class EstacionamentoUtils {
 
         long minutos = entrada.until(saida, ChronoUnit.MINUTES);
         double total = 0.0;
+
         if (minutos <= 15) {
             total += PRIMEIROS_15_MINUTOS;
         } else if (minutos <= 60) {
@@ -41,8 +42,8 @@ public class EstacionamentoUtils {
             long tempoAdicional = minutos - 60;
             long intervalosAdicionais = (tempoAdicional + 14) / 15;
             total += PRIMEIROS_60_MINUTOS + (ADICIONAL_15_MINUTOS * intervalosAdicionais);
-            // complete com a lógica para calcular o custo acima de 60 minutos de uso
         }
+
         return new BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN);
     }
 
@@ -51,7 +52,7 @@ public class EstacionamentoUtils {
 
         BigDecimal desconto = null;
 
-        if (numeroDeVezes % 10 == 0 && numeroDeVezes != 0) {
+        if (numeroDeVezes % 10 == 0 && numeroDeVezes > 0) {
             desconto = custo.multiply(BigDecimal.valueOf(DESCONTO_PERCENTUAL));
         } else {
             desconto = new BigDecimal(0);
