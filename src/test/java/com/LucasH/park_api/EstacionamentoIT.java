@@ -1,6 +1,8 @@
 package com.LucasH.park_api;
 
 import com.LucasH.park_api.web.dto.EstacionamentoCreateDto;
+import com.LucasH.park_api.web.dto.PageableDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -251,4 +253,52 @@ public class EstacionamentoIT {
                 .jsonPath("statusText").isEqualTo("Forbidden")
                 .jsonPath("message").isEqualTo("Access Denied");
     }
+
+    @Test
+    public void BuscarEstacionamentos_PorClienteCpf_RetornarSucessoStatus200() {
+      PageableDto responseBody = testClient
+                .get()
+                .uri("api/v1/estacionamentos/cpf/{cpf}?size=1&page=0" ,"38352600060")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+              .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getContent()).size().isEqualTo(1);
+        Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(2);
+        Assertions.assertThat(responseBody.getSize()).isEqualTo(1);
+
+        responseBody = testClient
+                .get()
+                .uri("api/v1/estacionamentos/cpf/{cpf}?size=1&page=1" ,"38352600060")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getContent()).size().isEqualTo(1);
+        Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(2);
+        Assertions.assertThat(responseBody.getSize()).isEqualTo(1);
+    }
+
+    @Test
+    public void buscarEstacionamento_PorClienteCpfComRoleUser_RetornarErrorMensageStatus403() {
+        testClient
+                .get()
+                .uri("api/v1/estacionamentos/cpf/{cpf}" ,"38352600060")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/cpf/38352600060")
+                .jsonPath("method").isEqualTo("GET")
+                .jsonPath("status").isEqualTo("403")
+                .jsonPath("statusText").isEqualTo("Forbidden")
+                .jsonPath("message").isEqualTo("Access Denied");
+    }
+
 }
