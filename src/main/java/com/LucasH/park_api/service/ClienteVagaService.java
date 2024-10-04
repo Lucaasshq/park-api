@@ -38,8 +38,15 @@ public class ClienteVagaService{
     public long getTotalDevezesEstacionamentoCompleto(String cpf) {
         return vagaRepository.countByClienteCpfAndDataSaidaIsNotNull(cpf);
     }
+
     @Transactional(readOnly = true)
     public Page<ClienteVagaProjection> buscarTodosProClienteCpf(String cpf, Pageable pageable) {
         return vagaRepository.findAllByClienteCpf(cpf, pageable);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<ClienteVagaProjection> buscarTodosPorUsuarioId(Long id, Pageable pageable) {
+        return vagaRepository.findAllByClienteUsuarioId(id, pageable);
     }
 }

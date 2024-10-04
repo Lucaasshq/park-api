@@ -1,6 +1,7 @@
 package com.LucasH.park_api.web.controller;
 
 import com.LucasH.park_api.entity.ClienteVaga;
+import com.LucasH.park_api.jwt.JwtUserDetails;
 import com.LucasH.park_api.repository.projection.ClienteVagaProjection;
 import com.LucasH.park_api.service.ClienteService;
 import com.LucasH.park_api.service.ClienteVagaService;
@@ -32,6 +33,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -135,5 +137,39 @@ public class EstacionamentoController {
        Page<ClienteVagaProjection> projectionPage = clienteVagaService.buscarTodosProClienteCpf(cpf, pageable);
        PageableDto dto = PageableMapper.toDto(projectionPage);
        return ResponseEntity.ok(dto);
+    }
+
+
+    @Operation(summary = "Localizar os registros de estacionamnetos do cliente por CPF", description = "Localizar os registros de estacionamnetos do cliente por CPF." +
+            "Requisição exige bearer toke, ROLE=ADMIN",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "cpf", description = "N° do CPF referente ao cliente a ser consultado", required = true),
+                    @Parameter(in = ParameterIn.QUERY, name = "page", description = "Representa a página a ser retornada",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "0"))),
+
+                    @Parameter(in = ParameterIn.QUERY, name = "size", description = "Representa o total de elementos por pagina",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "5"))),
+
+                    @Parameter(in = ParameterIn.QUERY, name = "sort", description = "Representa o padrão de ordenação 'dataEntrada,asc'",
+                            array = @ArraySchema(schema = @Schema(type = "string", defaultValue = "dataEntrada,asc")),
+                            hidden = true),
+
+
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EstacionamentoResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Recurso não permitdo ao ROLE= USER",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            })
+    @GetMapping
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<PageableDto> getAllEstacionamentosDoCliente(@AuthenticationPrincipal JwtUserDetails userDetails,
+                                                                                    @PageableDefault(size = 5, sort = "dataEntrada",
+                                                                                    direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<ClienteVagaProjection> projectionPage = clienteVagaService.buscarTodosPorUsuarioId(userDetails.getId(), pageable);
+        PageableDto dto = PageableMapper.toDto(projectionPage);
+        return ResponseEntity.ok(dto);
     }
 }
