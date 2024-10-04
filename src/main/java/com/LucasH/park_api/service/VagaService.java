@@ -12,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 import static com.LucasH.park_api.entity.Vaga.StatusVaga.LIVRE;
 
-@RequiredArgsConstructor
 @Service
 
 public class VagaService {
 
     private final VagaRepository vagaRepository;
+
+    public VagaService(VagaRepository vagaRepository) {
+        this.vagaRepository = vagaRepository;
+    }
 
     public Vaga salvar(Vaga vaga) {
         try {

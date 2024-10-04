@@ -11,13 +11,19 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
+
 @Service
 public class EstacionamentoService {
 
     private final ClienteVagaService clienteVagaService;
     private final ClienteService clienteService;
     private final VagaService vagaService;
+
+    public EstacionamentoService(ClienteVagaService clienteVagaService, ClienteService clienteService, VagaService vagaService) {
+        this.clienteVagaService = clienteVagaService;
+        this.clienteService = clienteService;
+        this.vagaService = vagaService;
+    }
 
     @Transactional
     public ClienteVaga checkIn(ClienteVaga clienteVaga) {

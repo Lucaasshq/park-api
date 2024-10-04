@@ -219,4 +219,20 @@ public class EstacionamentoIT {
                 .jsonPath("clienteCpf").isEqualTo("38352600060")
                 .jsonPath("valor").isNumber();
     }
+
+    @Test
+    public void checkOut_ComRoleUser_RetornarErrorMensageStatus403() {
+        testClient
+                .post()
+                .uri("api/v1/estacionamentos/check-out/{recibo}" ,"20241001-141519")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-out/20241001-141519")
+                .jsonPath("method").isEqualTo("POST")
+                .jsonPath("status").isEqualTo("403")
+                .jsonPath("statusText").isEqualTo("Forbidden")
+                .jsonPath("message").isEqualTo("Access Denied");
+    }
 }

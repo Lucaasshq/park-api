@@ -8,10 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
+
 public class ClienteVagaService{
 
     private final ClienteVagaRepository vagaRepository;
+
+    public ClienteVagaService(ClienteVagaRepository vagaRepository) {
+        this.vagaRepository = vagaRepository;
+    }
+
 
     @Transactional
     public ClienteVaga salvar(ClienteVaga vaga) {

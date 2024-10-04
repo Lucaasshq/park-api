@@ -17,12 +17,12 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "clientes")
 @EntityListeners(AuditingEntityListener.class)
 public class Cliente implements Serializable {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
