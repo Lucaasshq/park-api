@@ -220,6 +220,22 @@ public class EstacionamentoIT {
                 .jsonPath("valor").isNumber();
     }
 
+
+
+    @Test
+    public void checkOut_ComReciboInexistente_RetornarErrorMensageStatus404() {
+        testClient
+                .post()
+                .uri("api/v1/estacionamentos/check-out/{recibo}" ,"20241001-111111")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-out/20241001-111111")
+                .jsonPath("method").isEqualTo("POST")
+                .jsonPath("status").isEqualTo("404");
+    }
+
     @Test
     public void checkOut_ComRoleUser_RetornarErrorMensageStatus403() {
         testClient
