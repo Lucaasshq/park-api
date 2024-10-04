@@ -3,7 +3,10 @@ package com.LucasH.park_api.service;
 import com.LucasH.park_api.entity.ClienteVaga;
 import com.LucasH.park_api.exeception.EntityNotFoundException;
 import com.LucasH.park_api.repository.ClienteVagaRepository;
+import com.LucasH.park_api.repository.projection.ClienteVagaProjection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,5 +37,9 @@ public class ClienteVagaService{
     @Transactional(readOnly = true)
     public long getTotalDevezesEstacionamentoCompleto(String cpf) {
         return vagaRepository.countByClienteCpfAndDataSaidaIsNotNull(cpf);
+    }
+    @Transactional(readOnly = true)
+    public Page<ClienteVagaProjection> buscarTodosProClienteCpf(String cpf, Pageable pageable) {
+        return vagaRepository.findAllByClienteCpf(cpf, pageable);
     }
 }
