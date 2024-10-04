@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.math.BigDecimal;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/estacionamentos/estacionamentos-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/estacionamentos/estacionamentos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -198,5 +200,23 @@ public class EstacionamentoIT {
                 .jsonPath("status").isEqualTo("404")
                 .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in/20241001-222222")
                 .jsonPath("method").isEqualTo("GET");
+    }
+
+    @Test
+    public void checkOut_ComReciboExistente_RetornarEstacionamentoResponseDtoStatus200() {
+
+        testClient
+                .post()
+                .uri("api/v1/estacionamentos/check-out/{recibo}" ,"20241001-141519")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isOk() // 200
+                .expectBody()
+                .jsonPath("placa").isEqualTo("ASD-8564")
+                .jsonPath("marca").isEqualTo("Honda")
+                .jsonPath("modelo").isEqualTo("Civic Sport")
+                .jsonPath("cor").isEqualTo("Branco")
+                .jsonPath("clienteCpf").isEqualTo("38352600060")
+                .jsonPath("valor").isNumber();
     }
 }
