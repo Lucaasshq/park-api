@@ -13,12 +13,16 @@ insert into VAGAS (id, codigo, status ) values (200, 'A-02', 'OCUPADA');
 insert into VAGAS (id, codigo, status ) values (300, 'A-03', 'OCUPADA');
 insert into VAGAS (id, codigo, status ) values (400, 'A-04', 'LIVRE');
 insert into VAGAS (id, codigo, status ) values (500, 'A-05', 'LIVRE');
+insert into VAGAS (id, codigo, status ) values (600, 'A-06', 'LIVRE');
 
 insert into cliente_tem_vagas (numero_recibo, placa, marca, modelo, cor, data_entrada, id_cliente, id_vaga)
     values ('20241001-141519', 'ASD-8564', 'Honda', 'Civic Sport', 'Branco', '2024-10-01 14:37:19', 10, 100 );
 
 insert into cliente_tem_vagas (numero_recibo, placa, marca, modelo, cor, data_entrada, id_cliente, id_vaga)
     values ('20241001-151519', 'FTA-0456', 'BMW', 'C6', 'Verde', '2024-10-01 14:37:19', 20, 200 );
+
+insert into cliente_tem_vagas (numero_recibo, placa, marca, modelo, cor, data_entrada, id_cliente, id_vaga)
+values ('20241001-145062', 'SSS-0456', 'Honda', 'C6', 'Azul', '2024-10-01 14:37:19', 20, 600 );
 
 insert into cliente_tem_vagas (numero_recibo, placa, marca, modelo, cor, data_entrada, id_cliente, id_vaga)
     values ('20241001-161019', 'SFQ-6547', 'Toyota', 'Bandeirante', 'Prata', '2024-10-01 14:37:19', 10, 300);

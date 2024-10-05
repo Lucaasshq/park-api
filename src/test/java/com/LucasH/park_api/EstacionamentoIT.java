@@ -2,6 +2,7 @@ package com.LucasH.park_api;
 
 import com.LucasH.park_api.web.dto.EstacionamentoCreateDto;
 import com.LucasH.park_api.web.dto.PageableDto;
+import com.LucasH.park_api.web.exeception.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
@@ -300,5 +301,46 @@ public class EstacionamentoIT {
                 .jsonPath("statusText").isEqualTo("Forbidden")
                 .jsonPath("message").isEqualTo("Access Denied");
     }
+
+
+    @Test
+    public void buscarEstacionamento_PorClienteAutenticado_retornarPageableDtoStatus200() {
+        PageableDto responseBody = testClient
+                .get()
+                .uri("api/v1/estacionamentos")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"raissa@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getContent()).size().isEqualTo(2);
+        Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(1);
+        Assertions.assertThat(responseBody.getSize()).isEqualTo(5);
+        Assertions.assertThat(responseBody.getTotalElements()).isEqualTo(2);
+    }
+
+    @Test
+    public void buscarEstacionamento_PorRoleAdmin_retornarErrorMensageStatus403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("api/v1/estacionamentos")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"admin@gmail.com", "123456" ))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+        Assertions.assertThat(responseBody.getStatusText()).isEqualTo("Forbidden");
+        Assertions.assertThat(responseBody.getMessage()).isEqualTo("Access Denied");
+
+    }
+
+
 
 }
