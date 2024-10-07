@@ -14,4 +14,6 @@
   <img src="https://user-images.githubusercontent.com/25181517/117207242-07d5a700-adf4-11eb-975e-be04e62b984b.png" height="60" alt="Maven"  />
 </div>
 
+<h3 align="center">Documentada através do swagger</h3>
+
 ###
