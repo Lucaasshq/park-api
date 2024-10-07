@@ -9,7 +9,6 @@ import com.LucasH.park_api.service.EstacionamentoService;
 import com.LucasH.park_api.web.dto.EstacionamentoCreateDto;
 import com.LucasH.park_api.web.dto.EstacionamentoResponseDto;
 import com.LucasH.park_api.web.dto.PageableDto;
-import com.LucasH.park_api.web.dto.UsuarioResponseDto;
 import com.LucasH.park_api.web.dto.mapper.ClienteVagaMapper;
 import com.LucasH.park_api.web.dto.mapper.PageableMapper;
 import com.LucasH.park_api.web.exeception.ErrorMessage;
@@ -28,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @Tag(name = "Estacionamentos", description = "Operação de registro de entrada e saida de um veiculo do estacionamento.")
 @RequiredArgsConstructor
@@ -48,6 +45,7 @@ public class EstacionamentoController {
 
     private final EstacionamentoService estacionamentoService;
     private final ClienteVagaService clienteVagaService;
+    private final ClienteService clienteService;
 
 
     @Operation(summary = "Operação de check-in", description = "Recurso para dar entradde um veiculo no estacionamento",
