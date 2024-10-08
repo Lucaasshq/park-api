@@ -12,6 +12,7 @@
   <img src="https://user-images.githubusercontent.com/25181517/117533873-484d4480-afef-11eb-9fad-67c8605e3592.png" height="60" alt="Junit"  />
   <img src="https://user-images.githubusercontent.com/25181517/190229463-87fa862f-ccf0-48da-8023-940d287df610.png" height="60" alt="Lombok"  />
   <img src="https://user-images.githubusercontent.com/25181517/117207242-07d5a700-adf4-11eb-975e-be04e62b984b.png" height="60" alt="Maven"  />
+      <img src="http://jwt.io/img/icon.svg" height="60" alt="JWT"  />
 </div>
 
 <h3 align="center">Documentada através do swagger</h3>
